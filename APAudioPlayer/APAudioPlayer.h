@@ -32,6 +32,15 @@ Play. Existing channel will be released
 - (NSTimeInterval)duration;
 - (NSTimeInterval)position;
 
+/*
+ Crossfade
+ */
+@property (nonatomic, assign) NSTimeInterval crossfadeDuration; // default = 0, i.e. no crossfade
+
+/*
+ Volume
+ */
+
 @property (nonatomic, assign) CGFloat volume;
 
 @end

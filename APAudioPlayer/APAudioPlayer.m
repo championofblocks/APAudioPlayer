@@ -71,22 +71,29 @@ void CALLBACK ChannelEndedCallback(HSYNC handle, DWORD channel, DWORD data, void
 
 - (BOOL)playItemWithURL:(NSURL *)url
 {
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error: nil];
+  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error: nil];
 	[[AVAudioSession sharedInstance] setActive:YES error:nil];
-    
-    //Stop channel;
-    BASS_ChannelStop(_channel);
-    
-    //Free memory
-    BASS_StreamFree(_channel);
-    
-    _channel = BASS_StreamCreateFile(FALSE, [[url path] cStringUsingEncoding:NSUTF8StringEncoding], 0, 0, 0);
-    
-    //Set callback
-    BASS_ChannelSetSync(_channel, BASS_SYNC_END, 0, ChannelEndedCallback, (__bridge void *)self);
-    
-    //Let's Rock!
-    BASS_ChannelPlay(_channel, NO);
+  
+  if (self.crossfadeDuration >= 0) {
+    BASS_ChannelSlideAttribute(_channel, BASS_ATTRIB_VOL, 0, self.crossfadeDuration * 1000);
+  }
+  
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.crossfadeDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+  
+      //Stop channel;
+      BASS_ChannelStop(_channel);
+      
+      //Free memory
+      BASS_StreamFree(_channel);
+      
+      _channel = BASS_StreamCreateFile(FALSE, [[url path] cStringUsingEncoding:NSUTF8StringEncoding], 0, 0, 0);
+      
+      //Set callback
+      BASS_ChannelSetSync(_channel, BASS_SYNC_END, 0, ChannelEndedCallback, (__bridge void *)self);
+      
+      //Let's Rock!
+      BASS_ChannelPlay(_channel, NO);
+    });
 
     int code = BASS_ErrorGetCode();
     return code == 0;
