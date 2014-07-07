@@ -90,11 +90,7 @@ void CALLBACK ChannelEndedCallback(HSYNC handle, DWORD channel, DWORD data, void
       
       //Set callback
       BASS_ChannelSetSync(_channel, BASS_SYNC_END, 0, ChannelEndedCallback, (__bridge void *)self);
-      BASS_ChannelFlags(channel, self.isLooping ? BASS_SAMPLE_LOOP : 0, BASS_SAMPLE_LOOP);
-    
-    if (self.isLooping) {
-      BASS_ChannelFlags(_channel, BASS_SAMPLE_LOOP, BASS_SAMPLE_LOOP);
-    }
+      BASS_ChannelFlags(_channel, self.isLooping ? BASS_SAMPLE_LOOP : 0, BASS_SAMPLE_LOOP);
       
       //Let's Rock!
       BASS_ChannelPlay(_channel, NO);
