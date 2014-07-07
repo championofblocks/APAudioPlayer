@@ -32,6 +32,8 @@ Play. Existing channel will be released
 - (NSTimeInterval)duration;
 - (NSTimeInterval)position;
 
+@property (nonatomic, assign, getter = isLooping) BOOL loop;
+
 /*
  Crossfade
  */
@@ -40,7 +42,6 @@ Play. Existing channel will be released
 /*
  Volume
  */
-
 @property (nonatomic, assign) CGFloat volume;
 
 @end
